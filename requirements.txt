@@ -1,0 +1,11 @@
+httpx==0.25.2
+tenacity==8.2.3
+feedparser==6.0.10
+beautifulsoup4==4.12.2
+python-dateutil==2.8.2
+pydantic==1.10.13
+structlog==23.2.0
+ujson==5.8.0
+rapidfuzz==3.5.2
+tldextract==5.1.1
+pytest==7.4.4
