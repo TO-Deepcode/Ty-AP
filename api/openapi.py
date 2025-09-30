@@ -43,6 +43,12 @@ OPENAPI: Dict[str, Any] = {
         "version": "1.0.0",
         "description": "Serverless API for crypto market snapshots, news aggregation, and clustering."
     },
+    "servers": [
+        {
+            "url": "https://ty-ap.vercel.app",
+            "description": "Production"
+        }
+    ],
     "paths": {
         "/api/health": {
             "get": {
