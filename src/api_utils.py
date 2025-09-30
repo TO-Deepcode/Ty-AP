@@ -11,6 +11,8 @@ from urllib.parse import parse_qsl, urlparse
 
 import ujson
 
+from datetime import datetime, date
+
 from .logging_setup import get_logger
 from .security import ForbiddenOriginError, RequestContext, UnauthorizedError, ensure_cors, verify_signature
 
@@ -105,7 +107,8 @@ class BaseJsonHandler(BaseHTTPRequestHandler):
         response_headers.update(extra_headers)
         body = b""
         if payload is not None:
-            body = ujson.dumps(payload).encode("utf-8")
+            serializable = _make_json_serializable(payload)
+            body = ujson.dumps(serializable).encode("utf-8")
             response_headers["Content-Length"] = str(len(body))
         for key, value in response_headers.items():
             self.send_header(key, value)
@@ -122,3 +125,15 @@ def datetime_now():
     from datetime import datetime, timezone
 
     return datetime.now(timezone.utc)
+
+
+def _make_json_serializable(data: Any) -> Any:
+    if isinstance(data, (datetime, date)):
+        return data.isoformat()
+    if isinstance(data, dict):
+        return {key: _make_json_serializable(value) for key, value in data.items()}
+    if isinstance(data, list):
+        return [_make_json_serializable(item) for item in data]
+    if isinstance(data, tuple):
+        return [_make_json_serializable(item) for item in data]
+    return data
