@@ -34,7 +34,16 @@ def _store_snapshot(exchange: str, symbol: str, snapshot: MarketSnapshot) -> Non
             "ttl_days": 14,
         }
     )
-    storage.put_json(key, payload)
+    try:
+        storage.put_json(key, payload)
+    except Exception as exc:  # pragma: no cover - storage failures should not break response
+        logger.warning(
+            "store_snapshot_failed",
+            exchange=exchange,
+            symbol=symbol,
+            key=key,
+            error=str(exc),
+        )
 
 
 def _fetch_binance(symbol: str, granularity: str, limit: int) -> MarketSnapshot:
