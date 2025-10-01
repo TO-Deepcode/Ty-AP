@@ -93,7 +93,7 @@ def _fetch_bybit(symbol: str, granularity: str, limit: int) -> MarketSnapshot:
         "https://api.bybit.com/v5/market/kline",
         params={"category": "spot", "symbol": symbol, "interval": interval, "limit": limit},
     )
-    data = klines.get("result", {}).get("list", [])
+    data = klines.get("result", {}).get("list") or []
     candles: List[Candle] = []
     for entry in data:
         open_time = datetime.fromtimestamp(int(entry[0]) / 1000, tz=timezone.utc)
