@@ -42,7 +42,8 @@ def compute_signature(body: bytes, secret: str) -> str:
 
 def verify_signature(body: bytes, headers: Mapping[str, str]) -> None:
     settings = get_settings()
-    signature = headers.get(SIGNATURE_HEADER)
+    header_map = normalize_header_map(headers)
+    signature = header_map.get(SIGNATURE_HEADER.lower())
     if not signature:
         raise UnauthorizedError("missing signature header")
 
